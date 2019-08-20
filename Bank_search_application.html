@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head> 
+  <meta charset="utf-8" />
+  <title>Bank Search Application </title>    
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>   
+
+  <script>
+		var app = angular.module('app', []);
+		var res;
+		var step = 100;
+		var curArray = [];
+		var startingIndx = 0;
+		app.controller('ctrl', function($scope,$http) {
+			// Favourite banks			
+			$scope.pieces=[
+			{
+				ifsc:"ABHY0065101",
+				bank_id:"60",
+				branch:"PUNE SERVICE BRANCH",
+				address:"598  DHANVANT PLAZA BHUDWAR PETH PUNE- 411002",
+				city:"PUNE",
+				district:"PUNE",
+				state:"MAHARASHTRA",
+				bank_name:"ABHYUDAYA COOPERATIVE BANK LIMITED"
+			},
+
+			{
+				ifsc:"ABHY0065102",
+				bank_id:"60",
+				branch:"NANA PETH",
+				address:"355, NANA PETH, PUNE-411002",
+				city:"PUNE",
+				district:"PUNE",
+				state:"MAHARASHTRA",
+				bank_name:"ABHYUDAYA COOPERATIVE BANK LIMITED"
+			},
+
+			{
+				ifsc:"ABHY0065103",
+				bank_id:"60",
+				branch:"LAXMI ROAD",
+				address:"867, BUDHWAR PETH, LAXMI ROAD, PUNE-411002",
+				city:"PUNE",
+				district:"PUNE",
+				state:"MAHARASHTRA",
+				bank_name:"ABHYUDAYA COOPERATIVE BANK LIMITED"
+			},
+
+
+
+			{
+			ifsc:"ALLA0210188",
+			bank_id:11,
+			branch:"PUNE SADASHIV PETH",
+			address:"SEVA SADAN SOCIETY BUILDING,LAXMI ROAD,613/14,SADASHIV PETH,PUNE-411030",
+			city:"PUNE",
+			district:"PUNE",
+			state:"MAHARASHTRA",
+			bank_name:"ALLAHABAD BANK"
+			},
+
+			{
+				ifsc:"ALLA0210679",
+				bank_id:11,branch:"MANJARI",
+				address:"MAHADEO NAGAR P.O. MANJARI FARM, MANJARI, DIST. PUNE, MAHARASTRA  412307",
+				city:"PUNE",district:"PUNE",
+				state:"MAHARASHTRA",bank_name:"ALLAHABAD BANK"
+			},
+
+			{
+				ifsc:"ABHY0065001",
+				bank_id:60,
+				branch:"RTGS-HO",
+				address:"ABHYUDAYA BANK BLDG., B.NO.71, NEHRU NAGAR, KURLA (E), MUMBAI-400024",
+				city:"MUMBAI",
+				district:"GREATER MUMBAI",
+				state:"MAHARASHTRA",
+				bank_name:"ABHYUDAYA COOPERATIVE BANK LIMITED"
+			},
+
+			{
+				ifsc:"ALLA0210187",
+				bank_id:11,
+				branch:"PAREL BRANCH MUMBAI",
+				address:"DR. AMBEDKAR ROAD, PAREL, POST BOX NO 6610, MUMBAI -12",
+				city:"MUMBAI",
+				district:"GREATER MUMBAI",
+				state:"MAHARASHTRA",
+				bank_name:"ALLAHABAD BANK"
+			},
+			{
+				ifsc:"BARB0NASIKC",
+				bank_id:4,
+				branch:"CITY NASIK BRANCH",
+				address:"CITY NASIK BRANCH,GAURI SHANKAR TILAK ROAD NASIK CITY,NASIK,422001",
+				city:"NASHIK",
+				district:"NASHIK",
+				state:"MAHARASHTRA",
+				bank_name:"BANK OF BARODA"
+			},
+
+			{
+				ifsc:"ANDB0002280",
+				bank_id:15,
+				branch:"ZO PUNE",
+				address:"OFFICE NO 103 104 1ST FLOOR STELLAR ENCLAVE AUNDH PUNE 411007",
+				city:"PUNE",
+				district:"PUNE",
+				state:"MAHARASHTRA",
+				bank_name:"ANDHRA BANK"
+			},
+		]
+		    $scope.fetchData = () =>{
+		    	//console.log($scope.Bank)
+		    	$http.get(`https://vast-shore-74260.herokuapp.com/banks?city=${$scope.Bank}`).then(function(response){
+		    		$scope.pieces = null;
+		    		startingIndx=0;
+		    		res = response.data;	
+		    		curArray=[];
+					for(var i=startingIndx; i<startingIndx+step; i++){
+						curArray.push(res[i]);
+					 //console.log(response.data);
+					}
+					$scope.pieces = curArray;
+					console.log($scope.pieces);
+			});
+
+		    	$scope.next = () => {
+		    		if (startingIndx + step < res.length){
+		    			startingIndx = startingIndx + step;
+		    		
+		    		curArray = [];
+		    		for(var i=startingIndx; i<startingIndx+step; i++){
+						curArray.push(res[i]);
+					 //console.log(response.data);
+					}
+					$scope.pieces = curArray;
+					console.log($scope.pieces);
+				}
+		    	}
+
+		    	$scope.previous = () => {
+		    		if(startingIndx - step >= 0){
+		    			startingIndx = startingIndx - step;
+		    		
+		    		curArray = [];
+		    		for(var i=startingIndx; i<startingIndx+step; i++){
+						curArray.push(res[i]);
+					 //console.log(response.data);
+					}
+					$scope.pieces = curArray;
+					console.log($scope.pieces);
+
+		    	}
+		    	}
+
+		    }
+			}
+		);
+  </script>
+   
+  <style>
+  	body{
+  		background-color: #E9FFFA;
+  	}
+   table, th , td {
+      border: 1px solid grey;
+      border-collapse: collapse;
+      padding: 5px;
+      margin:10px;
+   }
+   table tr:nth-child(odd) {
+      background-color: #f2f2ff;
+   }
+   table tr:nth-child(even) {
+      background-color: #ffffff;
+   }
+   h1{
+   	color:#3346FF;
+   	text-align: center;
+   }
+   .btn{
+   	text-align: center;
+   }
+   .button{
+   	font-size: 15px;
+   	color: #005500;
+   }
+</style>
+
+</head>
+
+<body>
+
+	<h1>Bank Search Web Application</h1>
+
+	<div ng-app="app" ng-controller="ctrl" id="app">
+		<p>City </p>
+			<select ng-click="fetchData()" ng-model="Bank" id="city" name="City" >
+			<option value="">--Please Select--</option>
+			<option value="PUNE" selected="selected">Pune</option>
+			<option value="MUMBAI">Mumbai</option>
+			<option value="BANGALORE">Bangalore</option>
+			<option value="NAGPUR">Nagpur</option>
+			<option value="NASHIK">Nashik</option>
+			</select>
+	
+
+		 <p><input type="text" ng-model="keyword" placeholder="search for..."></p>
+   
+      <!-- display each  bank data using ng-repeat directive -->
+
+
+      <table>
+                     <tr>
+                     	<th>Bank Name</th>
+                        <th>IFSC</th>
+                        <th>Bank Id</th>
+                        <th>Branch</th>
+                        <th>Address</th>
+                     </tr>
+                     <tr  ng-repeat="x in pieces | filter: keyword">
+                        <td>{{x.bank_name}}</td>
+                        <td>{{x.ifsc}}</td>
+                        <td>{{x.bank_id}}</td>
+                        <td>{{x.branch}}</td>
+                        <td>{{x.address}}</td>
+                     </tr>
+     </table>	
+     <br/>
+     <div class="btn">
+	     <button class="button" ng-click="next()">Next</button>
+	     <button class="button" ng-click="previous()">Previous</button>
+ 	</div>
+  </div>
+</body>
+</html>
