@@ -11,8 +11,11 @@
 		var step = 100;
 		var curArray = [];
 		var startingIndx = 0;
+		var Favourite=[]
 		app.controller('ctrl', function($scope,$http) {
 			// Favourite banks			
+
+			
 			$scope.pieces=[
 			{
 				ifsc:"ABHY0065101",
@@ -110,9 +113,13 @@
 				state:"MAHARASHTRA",
 				bank_name:"ANDHRA BANK"
 			},
-		]
+		];
 		    $scope.fetchData = () =>{
 		    	//console.log($scope.Bank)
+		    	step=$scope.page;
+		    	if(step==null)
+		    		step=50;
+		    	
 		    	$http.get(`https://vast-shore-74260.herokuapp.com/banks?city=${$scope.Bank}`).then(function(response){
 		    		$scope.pieces = null;
 		    		startingIndx=0;
@@ -123,7 +130,7 @@
 					 //console.log(response.data);
 					}
 					$scope.pieces = curArray;
-					console.log($scope.pieces);
+					
 			});
 
 		    	$scope.next = () => {
@@ -136,7 +143,7 @@
 					 //console.log(response.data);
 					}
 					$scope.pieces = curArray;
-					console.log($scope.pieces);
+					
 				}
 		    	}
 
@@ -150,12 +157,18 @@
 					 //console.log(response.data);
 					}
 					$scope.pieces = curArray;
-					console.log($scope.pieces);
-
 		    	}
 		    	}
+		    	$scope.getItem = (item) => {		
+		    		Favourite.push(item);
 
-		    }
+		    	}
+		    	$scope.Fav = () => {		
+		    		$scope.pieces=Favourite;
+		    	}
+
+
+		    	}
 			}
 		);
   </script>
@@ -195,7 +208,9 @@
 
 	<h1>Bank Search Web Application</h1>
 
+
 	<div ng-app="app" ng-controller="ctrl" id="app">
+		<div class="top">
 		<p>City </p>
 			<select ng-click="fetchData()" ng-model="Bank" id="city" name="City" >
 			<option value="">--Please Select--</option>
@@ -206,27 +221,46 @@
 			<option value="NASHIK">Nashik</option>
 			</select>
 	
+		<button ng-click="Fav()">Favourite Banks</button>
+	</div>
+		<p>Row Per Pages</p>
+			<select ng-click="fetchData()" ng-model="page" id="city" name="City" >
+			<option value="">50</option>
+			<option value="100">100</option>
+			<option value="150">150</option>
+			<option value="200">200</option>
+			<option value="250">250</option>
+			</select>
+
 
 		 <p><input type="text" ng-model="keyword" placeholder="search for..."></p>
+
+
+
    
       <!-- display each  bank data using ng-repeat directive -->
 
 
       <table>
                      <tr>
+                     	<th>Favourites</th>
                      	<th>Bank Name</th>
                         <th>IFSC</th>
                         <th>Bank Id</th>
                         <th>Branch</th>
                         <th>Address</th>
                      </tr>
+                     
                      <tr  ng-repeat="x in pieces | filter: keyword">
+                     	<td><input type="checkbox" ng-model="checkvalue" ng-change="getItem(x)" ng-true-value="1" ng-false-value="0" />&nbsp;</td>
                         <td>{{x.bank_name}}</td>
                         <td>{{x.ifsc}}</td>
                         <td>{{x.bank_id}}</td>
                         <td>{{x.branch}}</td>
                         <td>{{x.address}}</td>
                      </tr>
+
+                   
      </table>	
      <br/>
      <div class="btn">
